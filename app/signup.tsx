@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link, useRouter } from 'expo-router';
+import { Link, Redirect, useRouter } from 'expo-router';
 import { useAuthStore } from '../src/store/useAuthStore';
 import { signupRequest } from '../src/utils/auth-api';
 import { globalStyles } from '../src/styles/global';
@@ -20,6 +20,12 @@ import { globalStyles } from '../src/styles/global';
 export default function SignupScreen() {
   const router = useRouter();
   const setSession = useAuthStore((s) => s.setSession);
+  const sessionToken = useAuthStore((s) => s.sessionToken);
+  const hydrated = useAuthStore((s) => s.hydrated);
+
+  if (hydrated && sessionToken) {
+    return <Redirect href="/(tabs)" />;
+  }
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
