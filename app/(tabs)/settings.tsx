@@ -3,6 +3,8 @@ import { Button, Modal, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AboutScreen from '../../src/components/AboutScreen';
 import { useTaskStore, type TaskFilter } from '../../src/store/useTaskStore';
+import { useAuthStore } from '../../src/store/useAuthStore';
+import { useRouter } from 'expo-router';
 
 const FILTERS: { label: string; value: TaskFilter }[] = [
   { label: 'Todas', value: 'all' },
@@ -15,8 +17,16 @@ export default function SettingsScreen() {
   const filter = useTaskStore((state) => state.filter);
   const setFilter = useTaskStore((state) => state.setFilter);
   const deleteAllTasks = useTaskStore((state) => state.deleteAllTasks);
+  const user = useAuthStore((state) => state.user);
+  const clearSession = useAuthStore((state) => state.clearSession);
+  const router = useRouter();
 
   const [aboutVisible, setAboutVisible] = useState(false);
+
+  const handleLogout = () => {
+    clearSession();
+    router.replace('/login');
+  };
 
   const completedCount = tasks.filter((t) => t.completed).length;
 
@@ -53,6 +63,18 @@ export default function SettingsScreen() {
           </View>
           <View style={styles.buttonSpacer}>
             <Button title="Excluir todas as tarefas" color="#ff4d4d" onPress={deleteAllTasks} />
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Conta</Text>
+          {user && (
+            <Text style={styles.statLine}>
+              {user.name ? `${user.name} ` : ''}({user.email})
+            </Text>
+          )}
+          <View style={styles.buttonSpacer}>
+            <Button title="Sair" color="#ff4d4d" onPress={handleLogout} />
           </View>
         </View>
       </ScrollView>
