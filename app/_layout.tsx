@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useAuthStore } from '../src/store/useAuthStore';
@@ -23,14 +22,6 @@ export default function RootLayout() {
       router.replace('/(tabs)');
     }
   }, [hydrated, sessionToken, segments, router]);
-
-  if (!hydrated) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   return (
     <>
